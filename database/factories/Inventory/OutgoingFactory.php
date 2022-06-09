@@ -2,6 +2,9 @@
 
 namespace Database\Factories\Inventory;
 
+use App\Models\Inventory\Actor;
+use App\Models\Inventory\Product;
+use App\Models\Inventory\Transaction;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +20,16 @@ class OutgoingFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'transaction_id' => Transaction::factory(),
+            'actor_id' => Actor::factory(),
+            'products' => [
+                'product_id' => Product::factory(),
+                'cantidad' => 10,
+                'precio' => 50,
+            ],
+            'subtotal' => 500,
+            'taxes' => 12,
+            'total' => 512
         ];
     }
 }

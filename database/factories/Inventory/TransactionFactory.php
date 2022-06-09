@@ -17,7 +17,10 @@ class TransactionFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'code' => $this->faker->unique()->name,
+            'name' => $this->faker->unique()->name,
+            'description' => $this->faker->text(),
+            'type' => $this->faker->randomElement(['incoming', 'outcoming'])
         ];
     }
 }

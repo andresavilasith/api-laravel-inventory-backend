@@ -15,7 +15,10 @@ return new class extends Migration
     {
         Schema::create('category_products', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->unique();
+            $table->text('description');
             $table->timestamps();
+            $table->engine = 'InnoDB';
         });
     }
 

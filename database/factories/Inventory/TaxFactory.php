@@ -17,7 +17,8 @@ class TaxFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name' => $this->faker->unique()->name(),
+            'percentage' => $this->faker->numberBetween(0,100),
         ];
     }
 }

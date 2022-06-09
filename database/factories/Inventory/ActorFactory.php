@@ -2,6 +2,7 @@
 
 namespace Database\Factories\Inventory;
 
+use App\Models\Inventory\Document;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,15 @@ class ActorFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'document_id' => Document::factory(),
+            'document' => $this->faker->numerify('##########'),
+            'client' => $this->faker->randomElement([0, 1]),
+            'provider' => $this->faker->randomElement([0, 1]),
+            'name' => $this->faker->name,
+            'address' => $this->faker->address(),
+            'email' => $this->faker->email(),
+            'cellphone' => $this->faker->phoneNumber(),
+            'phone' => $this->faker->phoneNumber()
         ];
     }
 }

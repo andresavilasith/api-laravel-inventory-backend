@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Outgoing extends Model
 {
     use HasFactory;
+    protected $casts = [ 
+        'products' => 'array' 
+     ];
 }

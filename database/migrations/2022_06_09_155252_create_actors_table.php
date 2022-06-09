@@ -15,7 +15,17 @@ return new class extends Migration
     {
         Schema::create('actors', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('document_id');
+            $table->foreign('document_id')->references('id')->on('documents')->onDelete('cascade');
             $table->timestamps();
+            $table->integer('document');
+            $table->integer('client');
+            $table->string('name');
+            $table->string('address');
+            $table->string('email')->unique();
+            $table->float('cellphone');
+            $table->float('phone');
+            $table->engine = 'InnoDB';
         });
     }
 
