@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class TaxController extends TestCase
+class CategoryProductControllerTest extends TestCase
 {
     /**
      * A basic feature test example.
