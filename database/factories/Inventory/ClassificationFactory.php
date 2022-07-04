@@ -5,9 +5,9 @@ namespace Database\Factories\Inventory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Inventory\CategoryProduct>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Inventory\Classification>
  */
-class CategoryProductFactory extends Factory
+class ClassificationFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,8 +17,8 @@ class CategoryProductFactory extends Factory
     public function definition()
     {
         return [
-            'name'=>$this->faker->unique()->name,
-            'description'=>$this->faker->text(),
+            'name' => $this->faker->name,
+            'description' => $this->faker->text(),
         ];
     }
 }

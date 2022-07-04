@@ -11,9 +11,9 @@ class Product extends Model
 
     protected $guarded = [];
 
-    public function category_product()
+    public function classification()
     {
-        return $this->belongsTo(CategoryProduct::class, 'category_product_id');
+        return $this->belongsTo(Classification::class, 'classification_id');
     }
     public function tax()
     {

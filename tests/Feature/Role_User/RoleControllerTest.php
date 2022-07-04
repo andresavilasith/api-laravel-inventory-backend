@@ -18,17 +18,21 @@ class RoleControllerTest extends TestCase
 
     use RefreshDatabase;
 
+    public function user_login()
+    {
+        DefaultDataSeed::default_data_seed();
+
+        $user = User::first();
+
+        Passport::actingAs($user);
+    }
 
     /** @test */
     public function test_role_index()
     {
         $this->withoutExceptionHandling();
 
-        DefaultDataSeed::default_data_seed();
-
-        $user = User::first();
-
-        Passport::actingAs($user);
+        $this->user_login();
 
         $respose = $this->postJson('/api/panel/roles');
 
@@ -47,11 +51,7 @@ class RoleControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        DefaultDataSeed::default_data_seed();
-
-        $user = User::first();
-
-        Passport::actingAs($user);
+        $this->user_login();
 
         $role = Role::first();
 
@@ -78,11 +78,7 @@ class RoleControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        DefaultDataSeed::default_data_seed();
-
-        $user = User::first();
-
-        Passport::actingAs($user);
+        $this->user_login();
 
         $response = $this->getJson('/api/panel/role/create');
 
@@ -103,11 +99,7 @@ class RoleControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        DefaultDataSeed::default_data_seed();
-
-        $user = User::first();
-
-        Passport::actingAs($user);
+        $this->user_login();
 
         $name = 'Role name';
         $slug = 'role.name';
@@ -147,11 +139,7 @@ class RoleControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        DefaultDataSeed::default_data_seed();
-
-        $user = User::first();
-
-        Passport::actingAs($user);
+        $this->user_login();
 
         $role = Role::first();
 
@@ -180,11 +168,7 @@ class RoleControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        DefaultDataSeed::default_data_seed();
-
-        $user = User::first();
-
-        Passport::actingAs($user);
+        $this->user_login();
 
         $role = Role::first();
 
@@ -225,11 +209,7 @@ class RoleControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        DefaultDataSeed::default_data_seed();
-
-        $user = User::first();
-
-        Passport::actingAs($user);
+        $this->user_login();
 
         $role = Role::first();
 

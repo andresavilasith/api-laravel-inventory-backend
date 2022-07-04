@@ -17,14 +17,15 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('document_id');
             $table->foreign('document_id')->references('id')->on('documents')->onDelete('cascade');
-            $table->timestamps();
-            $table->integer('document');
-            $table->integer('client');
+            $table->string('document');
             $table->string('name');
+            $table->integer('client');
+            $table->integer('provider');
             $table->string('address');
             $table->string('email')->unique();
-            $table->float('cellphone');
-            $table->float('phone');
+            $table->string('cellphone');
+            $table->string('phone');
+            $table->timestamps();
             $table->engine = 'InnoDB';
         });
     }

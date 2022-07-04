@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Inventory;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class IncomingControllerTest extends Controller
+class IncomingController extends Controller
 {
     /**
      * Display a listing of the resource.

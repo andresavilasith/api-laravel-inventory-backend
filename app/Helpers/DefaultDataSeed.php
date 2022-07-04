@@ -1,6 +1,13 @@
 <?php
+
 namespace App\Helpers;
 
+use App\Models\Inventory\Actor;
+use App\Models\Inventory\CategoryProduct;
+use App\Models\Inventory\Classification;
+use App\Models\Inventory\Document;
+use App\Models\Inventory\Tax;
+use App\Models\Inventory\Transaction;
 use Illuminate\Support\Facades\DB;
 use App\Models\Role_User\Role;
 use App\Models\Role_User\Category;
@@ -30,18 +37,18 @@ class DefaultDataSeed
             ]
         );
 
-        
+
         $role = Role::first();
 
         Category::factory()->times(2)->create();
-        
-        
-        
+
+
+
         Permission::factory()->times(5)->create();
 
         $permissions = Permission::all();
 
-        
+
 
         // Populate the pivot table
         User::all()->each(function ($user) use ($role) {
@@ -57,6 +64,14 @@ class DefaultDataSeed
                 $permissions
             );
         });
-    }
 
+        Tax::factory()->create();
+        Document::factory()->create();
+        Classification::factory()->create([
+            'name' => 'Clasificacion producto prueba',
+            'description' => 'Clasificacion producto descripcion'
+        ]);
+        Transaction::factory()->create();
+        Actor::factory()->create();
+    }
 }

@@ -16,16 +16,21 @@ class PermissionControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function test_permission_index()
+    public function user_login()
     {
-        $this->withoutExceptionHandling();
-
         DefaultDataSeed::default_data_seed();
 
         $user = User::first();
 
         Passport::actingAs($user);
+    }
+
+    /** @test */
+    public function test_permission_index()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->user_login();
 
         $response = $this->postJson('/api/panel/permissions');
 
@@ -46,11 +51,7 @@ class PermissionControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        DefaultDataSeed::default_data_seed();
-
-        $user = User::first();
-
-        Passport::actingAs($user);
+        $this->user_login();
 
         $permission = Permission::first();
 
@@ -70,11 +71,7 @@ class PermissionControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        DefaultDataSeed::default_data_seed();
-
-        $user = User::first();
-
-        Passport::actingAs($user);
+        $this->user_login();
 
         $response = $this->getJson('/api/panel/permission/create');
 
@@ -94,11 +91,7 @@ class PermissionControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        DefaultDataSeed::default_data_seed();
-
-        $user = User::first();
-
-        Passport::actingAs($user);
+        $this->user_login();
 
         $category_id = 1;
         $name = 'Category 1 now';
@@ -135,11 +128,7 @@ class PermissionControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        DefaultDataSeed::default_data_seed();
-
-        $user = User::first();
-
-        Passport::actingAs($user);
+        $this->user_login();
 
         $permission = Permission::first();
 
@@ -158,11 +147,7 @@ class PermissionControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        DefaultDataSeed::default_data_seed();
-
-        $user = User::first();
-
-        Passport::actingAs($user);
+        $this->user_login();
 
         $permission = Permission::first();
 
@@ -201,11 +186,7 @@ class PermissionControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        DefaultDataSeed::default_data_seed();
-
-        $user = User::first();
-
-        Passport::actingAs($user);
+        $this->user_login();;
 
         $permission = Permission::first();
 

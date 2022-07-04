@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Inventory\ActorController;
-use App\Http\Controllers\Inventory\CategoryProductController;
+use App\Http\Controllers\Inventory\ClassificationController;
 use App\Http\Controllers\Inventory\DocumentController;
 use App\Http\Controllers\Inventory\IncomingController;
 use App\Http\Controllers\Inventory\OutgoingController;
@@ -56,7 +56,7 @@ Route::middleware('auth:api')->prefix('inventory')->group(function () {
     Route::resource('document', DocumentController::class)->names('document');
     Route::resource('actor', ActorController::class)->names('actor');
     Route::resource('product', ProductController::class)->names('product');
-    Route::resource('category', CategoryProductController::class)->names('category.product');
+    Route::resource('classification', ClassificationController::class)->names('classification');
     Route::resource('outgoing', OutgoingController::class)->names('outgoing');
     Route::resource('incoming', IncomingController::class)->names('incoming');
     Route::resource('transaction', TransactionController::class)->names('transaction');

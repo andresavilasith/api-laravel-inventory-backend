@@ -3,6 +3,7 @@
 namespace Database\Factories\Inventory;
 
 use App\Models\Inventory\CategoryProduct;
+use App\Models\Inventory\Classification;
 use App\Models\Inventory\Tax;
 use App\Models\Role_User\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -20,7 +21,7 @@ class ProductFactory extends Factory
     public function definition()
     {
         return [
-            'category_product_id' => CategoryProduct::factory(),
+            'classification_id' => Classification::factory(),
             'tax_id' => Tax::factory(),
             'code' => $this->faker->unique()->name,
             'name' => $this->faker->unique()->name,
