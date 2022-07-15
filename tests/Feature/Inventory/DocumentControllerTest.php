@@ -6,7 +6,6 @@ use App\Helpers\DefaultDataSeed;
 use App\Models\Inventory\Document;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
@@ -95,7 +94,7 @@ class DocumentControllerTest extends TestCase
 
         $response->assertOk();
 
-        $this->assertCount(2, Document::all());
+        $this->assertCount(5, Document::all());
 
         $document = Document::latest('id')->first();
 
@@ -103,7 +102,8 @@ class DocumentControllerTest extends TestCase
 
         $response->assertJsonStructure([
             'status',
-            'message'
+            'message',
+            'document'
         ])->assertStatus(200);
     }
 
@@ -145,7 +145,7 @@ class DocumentControllerTest extends TestCase
 
         $response->assertOk();
 
-        $this->assertCount(1, Document::all());
+        $this->assertCount(4, Document::all());
 
         $document = $document->fresh();
 
@@ -169,7 +169,7 @@ class DocumentControllerTest extends TestCase
 
         $response->assertOk();
 
-        $this->assertCount(0, Document::all());
+        $this->assertCount(3, Document::all());
 
         $documents = Document::paginate(15);
 

@@ -49,11 +49,12 @@ class DocumentController extends Controller
     {
         Gate::authorize('haveaccess', 'document.create');
 
-        Document::create($request->all());
+        $document = Document::create($request->all());
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Document created successfully'
+            'message' => 'Document created successfully',
+            'document' => $document
         ]);
     }
 
@@ -82,13 +83,13 @@ class DocumentController extends Controller
     public function edit(Document $document)
     {
         Gate::authorize('haveaccess', 'document.edit');
-        
+
         return response()->json([
             'document' => $document,
             'status' => 'success'
         ], 200);
     }
-    
+
     /**
      * Update the specified resource in storage.
      *
@@ -118,7 +119,7 @@ class DocumentController extends Controller
     public function destroy(Document $document)
     {
         Gate::authorize('haveaccess', 'document.destroy');
-        
+
         $document->delete();
 
         $documents = $document->paginate(15);

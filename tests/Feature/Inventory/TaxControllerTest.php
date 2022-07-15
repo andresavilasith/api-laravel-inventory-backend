@@ -116,7 +116,7 @@ class TaxControllerTest extends TestCase
 
         $response->assertOk();
 
-        $this->assertCount(2, Tax::all());
+        $this->assertCount(3, Tax::all());
 
         $tax = Tax::latest('id')->first();
 
@@ -149,7 +149,7 @@ class TaxControllerTest extends TestCase
 
         $response->assertOk();
 
-        $this->assertCount(1, Tax::all());
+        $this->assertCount(2, Tax::all());
 
         $tax = $tax->fresh();
 
@@ -173,7 +173,7 @@ class TaxControllerTest extends TestCase
 
         $response->assertOk();
 
-        $this->assertCount(0, Tax::all());
+        $this->assertCount(1, Tax::all());
 
         $taxes = Tax::paginate(15);
 

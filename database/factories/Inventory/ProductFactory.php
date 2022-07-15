@@ -28,7 +28,8 @@ class ProductFactory extends Factory
             'image' => null,
             'price' => $this->faker->numberBetween(1, 568),
             'stock' => $this->faker->numberBetween(0, 10000),
-            'sales' => $this->faker->numberBetween(0, 100000)
+            'sales' => $this->faker->numberBetween(0, 100000),
+            'receipts' => $this->faker->numberBetween(0, 100000)
         ];
     }
 }

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Inventory;
 
 use App\Http\Controllers\Controller;
+use App\Models\Inventory\Incoming;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class IncomingController extends Controller
 {
@@ -14,7 +16,13 @@ class IncomingController extends Controller
      */
     public function index()
     {
-        //
+        Gate::authorize('haveaccess', 'document.index');
+        $incomings = Incoming::paginate(15);
+
+        return response()->json([
+            'incomings' => $incomings,
+            'status' => 'success'
+        ]);
     }
 
     /**
@@ -24,7 +32,11 @@ class IncomingController extends Controller
      */
     public function create()
     {
-        //
+        Gate::authorize('haveaccess', 'document.create');
+
+        return response()->json([
+            'status' => 'success'
+        ]);
     }
 
     /**
@@ -35,7 +47,15 @@ class IncomingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Gate::authorize('haveaccess', 'incoming.create');
+
+        $incoming = Incoming::create($request->all());
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Incoming created successfully',
+            'incoming' => $incoming
+        ]);
     }
 
     /**
@@ -44,9 +64,14 @@ class IncomingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Incoming $incoming)
     {
-        //
+        Gate::authorize('haveaccess', 'incoming.show');
+
+        return response()->json([
+            'incoming' => $incoming,
+            'status' => 'success'
+        ]);
     }
 
     /**
@@ -55,9 +80,14 @@ class IncomingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Incoming $incoming)
     {
-        //
+        Gate::authorize('haveaccess', 'incoming.edit');
+
+        return response()->json([
+            'incoming' => $incoming,
+            'status' => 'success'
+        ], 200);
     }
 
     /**
@@ -67,9 +97,17 @@ class IncomingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Incoming $incoming)
     {
-        //
+        Gate::authorize('haveaccess', 'incoming.edit');
+
+        $incoming->update($request->all());
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Incoming updated successfully',
+            'incoming' => $incoming
+        ]);
     }
 
     /**
@@ -78,8 +116,18 @@ class IncomingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Incoming $incoming)
     {
-        //
+        Gate::authorize('haveaccess', 'incoming.destroy');
+
+        $incoming->delete();
+
+        $incomings = $incoming->paginate(15);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Incoming deleted successfully',
+            'incomings' => $incomings
+        ]);
     }
 }

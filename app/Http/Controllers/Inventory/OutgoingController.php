@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Inventory;
 
 use App\Http\Controllers\Controller;
+use App\Models\Inventory\Outgoing;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class OutgoingController extends Controller
 {
@@ -14,7 +16,13 @@ class OutgoingController extends Controller
      */
     public function index()
     {
-        //
+        Gate::authorize('haveaccess', 'outgoing.index');
+        $outgoings = Outgoing::paginate(15);
+
+        return response()->json([
+            'outgoings' => $outgoings,
+            'status' => 'success'
+        ]);
     }
 
     /**
@@ -24,7 +32,11 @@ class OutgoingController extends Controller
      */
     public function create()
     {
-        //
+        Gate::authorize('haveaccess', 'outgoing.create');
+
+        return response()->json([
+            'status' => 'success'
+        ]);
     }
 
     /**
@@ -35,7 +47,15 @@ class OutgoingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Gate::authorize('haveaccess', 'outgoing.create');
+
+        $outgoing = Outgoing::create($request->all());
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'outgoing created successfully',
+            'outgoing' => $outgoing
+        ]);
     }
 
     /**
@@ -44,9 +64,14 @@ class OutgoingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Outgoing $outgoing)
     {
-        //
+        Gate::authorize('haveaccess', 'outgoing.show');
+
+        return response()->json([
+            'outgoing' => $outgoing,
+            'status' => 'success'
+        ]);
     }
 
     /**
@@ -55,9 +80,14 @@ class OutgoingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Outgoing $outgoing)
     {
-        //
+        Gate::authorize('haveaccess', 'outgoing.edit');
+
+        return response()->json([
+            'outgoing' => $outgoing,
+            'status' => 'success'
+        ], 200);
     }
 
     /**
@@ -67,9 +97,17 @@ class OutgoingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Outgoing $outgoing)
     {
-        //
+        Gate::authorize('haveaccess', 'outgoing.edit');
+
+        $outgoing->update($request->all());
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Outgoing updated successfully',
+            'outgoing' => $outgoing
+        ]);
     }
 
     /**
@@ -78,8 +116,18 @@ class OutgoingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Outgoing $outgoing)
     {
-        //
+        Gate::authorize('haveaccess', 'outgoing.destroy');
+
+        $outgoing->delete();
+
+        $outgoings = $outgoing->paginate(15);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'outgoing deleted successfully',
+            'outgoings' => $outgoings
+        ]);
     }
 }

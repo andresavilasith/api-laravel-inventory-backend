@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Inventory;
 
 use App\Http\Controllers\Controller;
+use App\Models\Inventory\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ProductController extends Controller
 {
@@ -14,7 +16,13 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        Gate::authorize('haveaccess', 'product.index');
+        $products = Product::paginate(15);
+
+        return response()->json([
+            'products' => $products,
+            'status' => 'success'
+        ]);
     }
 
     /**
@@ -24,7 +32,11 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        Gate::authorize('haveaccess', 'product.create');
+
+        return response()->json([
+            'status' => 'success'
+        ]);
     }
 
     /**
@@ -35,7 +47,15 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Gate::authorize('haveaccess', 'product.create');
+
+        $product = Product::create($request->all());
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Product created successfully',
+            'product' => $product
+        ]);
     }
 
     /**
@@ -44,9 +64,14 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Product $product)
     {
-        //
+        Gate::authorize('haveaccess', 'product.show');
+
+        return response()->json([
+            'product' => $product,
+            'status' => 'success'
+        ]);
     }
 
     /**
@@ -55,9 +80,14 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Product $product)
     {
-        //
+        Gate::authorize('haveaccess', 'product.edit');
+
+        return response()->json([
+            'product' => $product,
+            'status' => 'success'
+        ], 200);
     }
 
     /**
@@ -67,9 +97,17 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Product $product)
     {
-        //
+        Gate::authorize('haveaccess', 'product.edit');
+
+        $product->update($request->all());
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Product updated successfully',
+            'product' => $product
+        ]);
     }
 
     /**
@@ -78,8 +116,18 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Product $product)
     {
-        //
+        Gate::authorize('haveaccess', 'product.destroy');
+
+        $product->delete();
+
+        $products = $product->paginate(15);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Product deleted successfully',
+            'products' => $products
+        ]);
     }
 }

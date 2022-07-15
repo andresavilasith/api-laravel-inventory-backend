@@ -6,6 +6,9 @@ use App\Models\Inventory\Actor;
 use App\Models\Inventory\CategoryProduct;
 use App\Models\Inventory\Classification;
 use App\Models\Inventory\Document;
+use App\Models\Inventory\Incoming;
+use App\Models\Inventory\Outgoing;
+use App\Models\Inventory\Product;
 use App\Models\Inventory\Tax;
 use App\Models\Inventory\Transaction;
 use Illuminate\Support\Facades\DB;
@@ -67,11 +70,11 @@ class DefaultDataSeed
 
         Tax::factory()->create();
         Document::factory()->create();
-        Classification::factory()->create([
-            'name' => 'Clasificacion producto prueba',
-            'description' => 'Clasificacion producto descripcion'
-        ]);
+        Classification::factory()->create();
         Transaction::factory()->create();
         Actor::factory()->create();
+        Product::factory()->create();
+        Incoming::factory()->create();
+        Outgoing::factory()->create();
     }
 }

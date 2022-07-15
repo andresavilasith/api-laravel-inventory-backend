@@ -107,16 +107,17 @@ class ClassificationControllerTest extends TestCase
         $name = "Clasificacion nueva";
         $description = "Clasificacion descripcion";
 
+        
         $response = $this->postJson('/api/inventory/classification', [
             'name' => $name,
             'description' => $description
         ]);
-
+        
         Gate::authorize('haveaccess', 'classification.create');
 
         $response->assertOk();
 
-        $this->assertCount(2, Classification::all());
+        $this->assertCount(3, Classification::all());
 
         $classification = Classification::latest('id')->first();
 
@@ -151,7 +152,7 @@ class ClassificationControllerTest extends TestCase
 
         $response->assertOk();
 
-        $this->assertCount(1, Classification::all());
+        $this->assertCount(2, Classification::all());
 
         $classification = $classification->fresh();
 
@@ -176,7 +177,7 @@ class ClassificationControllerTest extends TestCase
 
         $response->assertOk();
 
-        $this->assertCount(0, Classification::all());
+        $this->assertCount(1, Classification::all());
 
         $classifications = Classification::paginate(15);
 

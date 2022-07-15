@@ -23,13 +23,20 @@ class OutgoingFactory extends Factory
             'transaction_id' => Transaction::factory(),
             'actor_id' => Actor::factory(),
             'products' => [
-                'product_id' => Product::factory(),
-                'cantidad' => 10,
-                'precio' => 50,
+                [
+                    'product_id' => Product::factory(),
+                    'cantidad' => 10,
+                    'precio' => 50,
+                ],
+                [
+                    'product_id' => Product::factory(),
+                    'cantidad' => 10,
+                    'precio' => 60,
+                ],
             ],
-            'subtotal' => 500,
-            'taxes' => 12,
-            'total' => 512
+            'subtotal' => 1100,
+            'taxes' => 132,
+            'total' => 1232
         ];
     }
 }

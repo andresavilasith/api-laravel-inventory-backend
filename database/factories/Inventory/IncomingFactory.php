@@ -23,9 +23,11 @@ class IncomingFactory extends Factory
             'transaction_id' => Transaction::factory(),
             'actor_id' => Actor::factory(),
             'products' => [
-                'product_id' => Product::factory(),
-                'cantidad' => 10,
-                'precio' => 50,
+                [
+                    'product_id' => Product::factory(),
+                    'cantidad' => 10,
+                    'precio' => 50,
+                ]
             ],
             'total' => 500
         ];

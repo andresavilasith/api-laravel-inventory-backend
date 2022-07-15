@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Gate;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
+use function GuzzleHttp\Promise\all;
+
 class ActorControllerTest extends TestCase
 {
     use RefreshDatabase;
@@ -112,7 +114,7 @@ class ActorControllerTest extends TestCase
 
         $response->assertOk();
 
-        $this->assertCount(2, Actor::all());
+        $this->assertCount(4, Actor::all());
 
         $actor = Actor::latest('id')->first();
 
@@ -180,7 +182,7 @@ class ActorControllerTest extends TestCase
 
         $response->assertOk();
 
-        $this->assertCount(1, Actor::all());
+        $this->assertCount(3, Actor::all());
 
         $actor = $actor->fresh();
 
@@ -204,7 +206,7 @@ class ActorControllerTest extends TestCase
 
         $response->assertOk();
 
-        $this->assertCount(0, Actor::all());
+        $this->assertCount(2, Actor::all());
 
         $actors = Actor::paginate(15);
 

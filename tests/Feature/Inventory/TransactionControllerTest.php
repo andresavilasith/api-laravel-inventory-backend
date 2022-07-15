@@ -102,7 +102,7 @@ class TransactionControllerTest extends TestCase
 
         $response->assertOk();
 
-        $this->assertCount(2, Transaction::all());
+        $this->assertCount(4, Transaction::all());
 
         $transaction = Transaction::latest('id')->first();
 
@@ -159,7 +159,7 @@ class TransactionControllerTest extends TestCase
 
         $response->assertOk();
 
-        $this->assertCount(1, Transaction::all());
+        $this->assertCount(3, Transaction::all());
 
         $transaction = $transaction->fresh();
 
@@ -183,7 +183,7 @@ class TransactionControllerTest extends TestCase
 
         $response->assertOk();
 
-        $this->assertCount(0, Transaction::all());
+        $this->assertCount(2, Transaction::all());
 
         $transactions = Transaction::paginate(15);
 
