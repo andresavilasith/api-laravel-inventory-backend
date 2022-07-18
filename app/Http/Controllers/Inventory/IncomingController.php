@@ -4,11 +4,57 @@ namespace App\Http\Controllers\Inventory;
 
 use App\Http\Controllers\Controller;
 use App\Models\Inventory\Incoming;
+use App\Models\Inventory\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class IncomingController extends Controller
 {
+    public function updateProductReceiptsStock($products, $oldProducts, $add, $update)
+    {
+        if ($add) {
+
+            foreach ($products as $productValue) {
+                $product = Product::find($productValue['product_id']);
+                $productQuantity = $productValue['quantity'];
+                $product->receipts  = $product->receipts + $productQuantity;
+                $product->stock  = $product->stock + $productQuantity;
+                $product->update();
+            }
+        } else if ($update && $oldProducts != null) {
+
+            $updateProductsIds = [];
+
+            foreach ($products as $key => $productValue) {
+                $updateProductsIds[] = $productValue['product_id'];
+                $product = Product::find($productValue['product_id']);
+                $productQuantity = $productValue['quantity'];
+                $product->receipts  = $product->receipts - $oldProducts[$key]['quantity'] + $productQuantity;
+                $product->stock  =  $product->stock - $oldProducts[$key]['quantity'] + $productQuantity;
+                $product->update();
+            }
+
+            //Modify stock and receipts if the product is remove from the list of products 
+            foreach ($oldProducts as $key => $oldProductValue) {
+                $oldProductId = $oldProductValue['product_id'];
+                $quantityOldProduct = $oldProductValue['quantity'];
+                if (!in_array($oldProductId, $updateProductsIds)) {
+                    $product = Product::find($oldProductId);
+                    $product->stock = $product->stock - $quantityOldProduct;
+                    $product->receipts = $product->receipts - $quantityOldProduct;
+                    $product->update();
+                };
+            }
+        } else {
+            foreach ($products as $productValue) {
+                $product = Product::find($productValue['product_id']);
+                $productQuantity = $productValue['quantity'];
+                $product->receipts  = $product->receipts - $productQuantity;
+                $product->stock  = $product->stock - $productQuantity;
+                $product->update();
+            }
+        }
+    }
     /**
      * Display a listing of the resource.
      *
@@ -50,6 +96,9 @@ class IncomingController extends Controller
         Gate::authorize('haveaccess', 'incoming.create');
 
         $incoming = Incoming::create($request->all());
+        $products = $request->products;
+
+        $this->updateProductReceiptsStock($products, null, true, false);
 
         return response()->json([
             'status' => 'success',
@@ -101,8 +150,14 @@ class IncomingController extends Controller
     {
         Gate::authorize('haveaccess', 'incoming.edit');
 
-        $incoming->update($request->all());
 
+        $products = $request->products;
+
+        $oldProducts = $incoming->products;
+
+        $this->updateProductReceiptsStock($products, $oldProducts, false, true);
+
+        $incoming->update($request->all());
         return response()->json([
             'status' => 'success',
             'message' => 'Incoming updated successfully',
@@ -119,11 +174,13 @@ class IncomingController extends Controller
     public function destroy(Incoming $incoming)
     {
         Gate::authorize('haveaccess', 'incoming.destroy');
-
-        $incoming->delete();
-
         $incomings = $incoming->paginate(15);
 
+        $products = $incoming->products;
+
+        $this->updateProductReceiptsStock($products, null, false, false);
+
+        $incoming->delete();
         return response()->json([
             'status' => 'success',
             'message' => 'Incoming deleted successfully',

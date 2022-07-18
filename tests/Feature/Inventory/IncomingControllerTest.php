@@ -88,14 +88,37 @@ class IncomingControllerTest extends TestCase
 
         $this->user_login();
 
+        $product1 = Product::factory()->create(
+            [
+                'stock' => 5,
+                'receipts' => 20,
+                'sales' => 0,
+            ]
+        );
+        $product2 = Product::factory()->create(
+            [
+                'stock' => 5,
+                'receipts' => 15,
+                'sales' => 0,
+            ]
+        );
+
         $transaction_id = Transaction::first()->id;
         $actor_id = Actor::first()->id;
         $products = [
-            'product_id' => Product::first()->id,
-            'cantidad' => 10,
-            'precio' => 60,
+            [
+                'product_id' => $product1->id,
+                'quantity' => 10,
+                'price' => 60,
+            ],
+            [
+                'product_id' => $product2->id,
+                'quantity' => 30,
+                'price' => 30,
+            ],
+
         ];
-        $total = 600;
+        $total = 1500;
 
         $response = $this->postJson('/api/inventory/incoming', [
             'transaction_id' => $transaction_id,
@@ -103,6 +126,9 @@ class IncomingControllerTest extends TestCase
             'products' => $products,
             'total' => $total,
         ]);
+
+        $product1Fresh = Product::find($product1->id);
+        $product2Fresh = Product::find($product2->id);
 
         Gate::authorize('haveaccess', 'incoming.create');
 
@@ -115,6 +141,10 @@ class IncomingControllerTest extends TestCase
         $this->assertEquals($incoming->transaction_id, $transaction_id);
         $this->assertEquals($incoming->actor_id, $actor_id);
         $this->assertEquals($incoming->products, $products);
+        $this->assertEquals($product1Fresh->stock, 15);
+        $this->assertEquals($product1Fresh->receipts, 30);
+        $this->assertEquals($product2Fresh->stock, 35);
+        $this->assertEquals($product2Fresh->receipts, 45);
         $this->assertEquals($incoming->total, $total);
 
         $response->assertJsonStructure([
@@ -149,16 +179,53 @@ class IncomingControllerTest extends TestCase
 
         $this->user_login();
 
-        $incoming = Incoming::first();
+        $product1 = Product::factory()->create(
+            [
+                'stock' => 18,
+                'receipts' => 16,
+                'sales' => 0,
+            ]
+        );
+        $product2 = Product::factory()->create(
+            [
+                'stock' => 13,
+                'receipts' => 12,
+                'sales' => 0,
+            ]
+        );
+
+        $incoming = Incoming::factory()->create(
+            [
+                'products' => [
+                    [
+                        'product_id' => $product1->id,
+                        'quantity' => 15,
+                        'price' => 50,
+                    ],
+                    [
+                        'product_id' => $product2->id,
+                        'quantity' => 10,
+                        'price' => 40,
+                    ]
+                ]
+            ]
+        );
 
         $transaction_id = Transaction::first()->id;
         $actor_id = Actor::first()->id;
         $products = [
-            'product_id' => Product::latest('id')->first()->id,
-            'cantidad' => 5,
-            'precio' => 60,
+            [
+                'product_id' => $product1->id,
+                'quantity' => 4,
+                'price' => 60,
+            ],
+            [
+                'product_id' => $product2->id,
+                'quantity' => 6,
+                'price' => 60,
+            ],
         ];
-        $total = 300;
+        $total = 720;
 
         $response = $this->putJson('/api/inventory/incoming/' . $incoming->id, [
             'transaction_id' => $transaction_id,
@@ -167,17 +234,106 @@ class IncomingControllerTest extends TestCase
             'total' => $total,
         ]);
 
+
         Gate::authorize('haveaccess', 'incoming.edit');
+
+        $product1Fresh = Product::find($product1->id);
+        $product2Fresh = Product::find($product2->id);
 
         $response->assertOk();
 
-        $this->assertCount(1, Incoming::all());
+        $this->assertCount(2, Incoming::all());
 
         $incoming = $incoming->fresh();
 
         $this->assertEquals($incoming->transaction_id, $transaction_id);
         $this->assertEquals($incoming->actor_id, $actor_id);
         $this->assertEquals($incoming->products, $products);
+        $this->assertEquals($product1Fresh->stock, 7);
+        $this->assertEquals($product1Fresh->receipts, 5);
+        $this->assertEquals($product2Fresh->stock, 9);
+        $this->assertEquals($product2Fresh->receipts, 8);
+        $this->assertEquals($incoming->total, $total);
+
+        $response->assertJsonStructure(['status', 'message', 'incoming'])->assertStatus(200);
+    }
+
+    /** @test */
+    public function test_incoming_update_with_less_items()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->user_login();
+
+        $product1 = Product::factory()->create(
+            [
+                'stock' => 18,
+                'receipts' => 16,
+                'sales' => 0,
+            ]
+        );
+        $product2 = Product::factory()->create(
+            [
+                'stock' => 13,
+                'receipts' => 12,
+                'sales' => 0,
+            ]
+        );
+
+        $incoming = Incoming::factory()->create(
+            [
+                'products' => [
+                    [
+                        'product_id' => $product1->id,
+                        'quantity' => 15,
+                        'price' => 50,
+                    ],
+                    [
+                        'product_id' => $product2->id,
+                        'quantity' => 10,
+                        'price' => 40,
+                    ]
+                ]
+            ]
+        );
+
+        $transaction_id = Transaction::first()->id;
+        $actor_id = Actor::first()->id;
+        $products = [
+            [
+                'product_id' => $product1->id,
+                'quantity' => 4,
+                'price' => 60,
+            ],
+        ];
+        $total = 720;
+
+        $response = $this->putJson('/api/inventory/incoming/' . $incoming->id, [
+            'transaction_id' => $transaction_id,
+            'actor_id' => $actor_id,
+            'products' => $products,
+            'total' => $total,
+        ]);
+
+
+        Gate::authorize('haveaccess', 'incoming.edit');
+
+        $product1Fresh = Product::find($product1->id);
+        $product2Fresh = Product::find($product2->id);
+
+        $response->assertOk();
+
+        $this->assertCount(2, Incoming::all());
+
+        $incoming = $incoming->fresh();
+
+        $this->assertEquals($incoming->transaction_id, $transaction_id);
+        $this->assertEquals($incoming->actor_id, $actor_id);
+        $this->assertEquals($incoming->products, $products);
+        $this->assertEquals($product1Fresh->stock, 7);
+        $this->assertEquals($product1Fresh->receipts, 5);
+        $this->assertEquals($product2Fresh->stock, 3);
+        $this->assertEquals($product2Fresh->receipts, 2);
         $this->assertEquals($incoming->total, $total);
 
         $response->assertJsonStructure(['status', 'message', 'incoming'])->assertStatus(200);
@@ -190,7 +346,37 @@ class IncomingControllerTest extends TestCase
 
         $this->user_login();
 
-        $incoming = Incoming::first();
+        $product1 = Product::factory()->create(
+            [
+                'stock' => 18,
+                'receipts' => 16,
+                'sales' => 0,
+            ]
+        );
+        $product2 = Product::factory()->create(
+            [
+                'stock' => 13,
+                'receipts' => 12,
+                'sales' => 0,
+            ]
+        );
+
+        $incoming = Incoming::factory()->create(
+            [
+                'products' => [
+                    [
+                        'product_id' => $product1->id,
+                        'quantity' => 5,
+                        'price' => 50,
+                    ],
+                    [
+                        'product_id' => $product2->id,
+                        'quantity' => 7,
+                        'price' => 40,
+                    ]
+                ]
+            ]
+        );
 
         $response = $this->deleteJson('/api/inventory/incoming/' . $incoming->id);
 
@@ -198,7 +384,15 @@ class IncomingControllerTest extends TestCase
 
         $response->assertOk();
 
-        $this->assertCount(0, Incoming::all());
+        $this->assertCount(1, Incoming::all());
+
+        $product1Fresh = Product::find($product1->id);
+        $product2Fresh = Product::find($product2->id);
+
+        $this->assertEquals($product1Fresh->stock, 13);
+        $this->assertEquals($product1Fresh->receipts, 11);
+        $this->assertEquals($product2Fresh->stock, 6);
+        $this->assertEquals($product2Fresh->receipts, 5);
 
         $incomings = Incoming::paginate(15);
 
