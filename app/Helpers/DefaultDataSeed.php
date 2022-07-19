@@ -3,7 +3,6 @@
 namespace App\Helpers;
 
 use App\Models\Inventory\Actor;
-use App\Models\Inventory\CategoryProduct;
 use App\Models\Inventory\Classification;
 use App\Models\Inventory\Document;
 use App\Models\Inventory\Incoming;
@@ -11,7 +10,6 @@ use App\Models\Inventory\Outgoing;
 use App\Models\Inventory\Product;
 use App\Models\Inventory\Tax;
 use App\Models\Inventory\Transaction;
-use Illuminate\Support\Facades\DB;
 use App\Models\Role_User\Role;
 use App\Models\Role_User\Category;
 use App\Models\Role_User\Permission;
@@ -45,13 +43,9 @@ class DefaultDataSeed
 
         Category::factory()->times(2)->create();
 
-
-
         Permission::factory()->times(5)->create();
 
         $permissions = Permission::all();
-
-
 
         // Populate the pivot table
         User::all()->each(function ($user) use ($role) {
