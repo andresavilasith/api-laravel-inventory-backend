@@ -162,7 +162,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         App\Providers\DefaultDataSeedServiceProvider::class,
-       App\Providers\IncomingProductUpdateServiceProvider::class,
+       App\Providers\IncomingManageServiceProvider::class,
         /*
          * Package Service Providers...
          */
@@ -229,7 +229,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'DefaultDataSeed' => App\Helpers\DefaultDataSeed::class,
-        'IncomingProductUpdate' => App\Helpers\IncomingProductUpdate::class,
+        'IncomingManage' => App\Helpers\IncomingManage::class,
     ],
 
 ];

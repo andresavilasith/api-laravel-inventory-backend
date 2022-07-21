@@ -22,10 +22,10 @@ return new class extends Migration
             $table->string('code');
             $table->string('name');
             $table->string('image')->nullable();
-            $table->float('price');
-            $table->float('stock');
-            $table->float('sales');
-            $table->float('receipts');
+            $table->decimal('price',10,2);
+            $table->decimal('stock',10,2);
+            $table->decimal('sales',10,2);
+            $table->decimal('receipts',10,2);
             $table->timestamps();
             $table->engine = 'InnoDB';
         });

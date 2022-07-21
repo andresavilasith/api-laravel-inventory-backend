@@ -22,7 +22,7 @@ class ProductFactory extends Factory
     {
         return [
             'classification_id' => Classification::factory(),
-            'tax_id' => Tax::factory(),
+            'tax_id' => 1,
             'code' => $this->faker->unique()->name,
             'name' => $this->faker->unique()->name,
             'image' => null,

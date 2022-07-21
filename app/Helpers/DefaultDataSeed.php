@@ -62,7 +62,9 @@ class DefaultDataSeed
             );
         });
 
-        Tax::factory()->create();
+        Tax::factory()->create([
+            'percentage'=>12
+        ]);
         Document::factory()->create();
         Classification::factory()->create();
         Transaction::factory()->create();

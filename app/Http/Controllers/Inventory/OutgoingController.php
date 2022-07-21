@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Inventory;
 
+use App\Helpers\OutgoingManage;
 use App\Http\Controllers\Controller;
 use App\Models\Inventory\Outgoing;
 use Illuminate\Http\Request;
@@ -49,13 +50,28 @@ class OutgoingController extends Controller
     {
         Gate::authorize('haveaccess', 'outgoing.create');
 
-        $outgoing = Outgoing::create($request->all());
+        $products = $request->products;
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'outgoing created successfully',
-            'outgoing' => $outgoing
-        ]);
+        $outgoingRequest = $request->all();
+
+        OutgoingManage::subtractProducts($products);
+        $save = OutgoingManage::calculateTotalWithTaxes($outgoingRequest);
+
+        $data = [
+            'status' => 'error',
+        ];
+
+        if ($save) {
+            $outgoing = Outgoing::create($request->all());
+
+            $data = [
+                'status' => 'success',
+                'message' => 'outgoing created successfully',
+                'outgoing' => $outgoing
+            ];
+        }
+
+        return response()->json($data);
     }
 
     /**
@@ -101,13 +117,30 @@ class OutgoingController extends Controller
     {
         Gate::authorize('haveaccess', 'outgoing.edit');
 
-        $outgoing->update($request->all());
+        $oldProducts = $outgoing->products;
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Outgoing updated successfully',
-            'outgoing' => $outgoing
-        ]);
+        $products = $request->products;
+
+        $outgoingRequest = $request->all();
+
+        OutgoingManage::updateProducts($oldProducts, $products);
+
+        $update = OutgoingManage::calculateTotalWithTaxes($outgoingRequest);
+        
+        $data = [
+            'status' => 'error',
+        ];
+
+        if ($update) {
+            $outgoing->update($request->all());
+            $data = [
+                'status' => 'success',
+                'message' => 'outgoing created successfully',
+                'outgoing' => $outgoing
+            ];
+        }
+
+        return response()->json($data);
     }
 
     /**
@@ -119,6 +152,11 @@ class OutgoingController extends Controller
     public function destroy(Outgoing $outgoing)
     {
         Gate::authorize('haveaccess', 'outgoing.destroy');
+
+        $products = $outgoing->products;
+        //dd($products);
+
+        OutgoingManage::removeProducts($products);
 
         $outgoing->delete();
 

@@ -4,7 +4,7 @@ namespace App\Helpers;
 
 use App\Models\Inventory\Product;
 
-class IncomingProductUpdate
+class IncomingManage
 {
     public static function addProducts($products)
     {
@@ -25,8 +25,11 @@ class IncomingProductUpdate
             $updateProductsIds[] = $productValue['product_id'];
             $product = Product::find($productValue['product_id']);
             $productQuantity = $productValue['quantity'];
-            $product->receipts  = $product->receipts - $oldProducts[$key]['quantity'] + $productQuantity;
-            $product->stock  =  $product->stock - $oldProducts[$key]['quantity'] + $productQuantity;
+
+            $product->stock  =  $product->stock - $oldProducts[$key]['quantity'] +  $productQuantity;
+            $product->receipts  = $product->receipts - $oldProducts[$key]['quantity'] +  $productQuantity;
+
+
             $product->update();
         }
 
@@ -52,5 +55,26 @@ class IncomingProductUpdate
             $product->stock  = $product->stock - $productQuantity;
             $product->update();
         }
+    }
+
+    public static function calculateTotal($incomingRequest)
+    {
+        $products = $incomingRequest['products'];
+        $isEqual = false;
+        $totalQuantityPrice = [];
+        $total = 0;
+
+
+        foreach ($products as  $product) {
+            $totalQuantityPrice[] = $product['quantity'] * $product['price'];
+        }
+
+        $total = array_sum($totalQuantityPrice);
+
+        if ($incomingRequest['total'] === $total) {
+            $isEqual = true;
+        }
+
+        return $isEqual;
     }
 }

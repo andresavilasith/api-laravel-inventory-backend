@@ -6,6 +6,7 @@ use App\Helpers\DefaultDataSeed;
 use App\Models\Inventory\Actor;
 use App\Models\Inventory\Outgoing;
 use App\Models\Inventory\Product;
+use App\Models\Inventory\Tax;
 use App\Models\Inventory\Transaction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -88,23 +89,36 @@ class OutgoingControllerTest extends TestCase
 
         $this->user_login();
 
+        $product1 = Product::factory()->create(
+            [
+                'stock' => 25,
+                'sales' => 20,
+            ]
+        );
+        $product2 = Product::factory()->create(
+            [
+                'stock' => 35,
+                'sales' => 15,
+            ]
+        );
+
         $transaction_id = Transaction::first()->id;
         $actor_id = Actor::first()->id;
         $products = [
             [
-                'product_id' => Product::first()->id,
-                'cantidad' => 10,
-                'precio' => 60,
+                'product_id' => $product1->id,
+                'quantity' => 10,
+                'price' => 60,
             ],
             [
-                'product_id' => Product::latest('id')->first()->id,
-                'cantidad' => 3,
-                'precio' => 30,
+                'product_id' => $product2->id,
+                'quantity' => 13,
+                'price' => 30,
             ]
         ];
-        $subtotal = 690;
-        $taxes = 82.80;
-        $total = 772.80;
+        $subtotal = 990;
+        $taxes = 118.80;
+        $total = 1108.80;
 
         $response = $this->postJson('/api/inventory/outgoing', [
             'transaction_id' => $transaction_id,
@@ -117,6 +131,9 @@ class OutgoingControllerTest extends TestCase
 
         Gate::authorize('haveaccess', 'outgoing.create');
 
+        $product1Fresh = Product::find($product1->id);
+        $product2Fresh = Product::find($product2->id);
+
         $response->assertOk();
 
         $this->assertCount(2, Outgoing::all());
@@ -126,6 +143,10 @@ class OutgoingControllerTest extends TestCase
         $this->assertEquals($outgoing->transaction_id, $transaction_id);
         $this->assertEquals($outgoing->actor_id, $actor_id);
         $this->assertEquals($outgoing->products, $products);
+        $this->assertEquals($product1Fresh->stock, 15);
+        $this->assertEquals($product1Fresh->sales, 30);
+        $this->assertEquals($product2Fresh->stock, 22);
+        $this->assertEquals($product2Fresh->sales, 28);
         $this->assertEquals($outgoing->subtotal, $subtotal);
         $this->assertEquals($outgoing->taxes, $taxes);
         $this->assertEquals($outgoing->total, $total);
@@ -162,25 +183,53 @@ class OutgoingControllerTest extends TestCase
 
         $this->user_login();
 
-        $outgoing = Outgoing::first();
+        $product1 = Product::factory()->create(
+            [
+                'stock' => 23,
+                'sales' => 21,
+            ]
+        );
+        $product2 = Product::factory()->create(
+            [
+                'stock' => 35,
+                'sales' => 18,
+            ]
+        );
+
+        $outgoing = Outgoing::factory()->create(
+            [
+                'products' => [
+                    [
+                        'product_id' => $product1->id,
+                        'quantity' => 15,
+                        'price' => 50,
+                    ],
+                    [
+                        'product_id' => $product2->id,
+                        'quantity' => 10,
+                        'price' => 40,
+                    ]
+                ]
+            ]
+        );
 
         $transaction_id = Transaction::first()->id;
         $actor_id = Actor::first()->id;
         $products = [
             [
-                'product_id' => Product::first()->id,
-                'cantidad' => 10,
-                'precio' => 20,
+                'product_id' => $product1->id,
+                'quantity' => 12,
+                'price' => 20,
             ],
             [
-                'product_id' => Product::latest('id')->first()->id,
-                'cantidad' => 3,
-                'precio' => 40,
+                'product_id' => $product2->id,
+                'quantity' => 18,
+                'price' => 40,
             ]
         ];
-        $subtotal = 320;
-        $taxes = 38.40;
-        $total = 358.40;
+        $subtotal = 960;
+        $taxes = 115.20;
+        $total = 1075.20;
 
         $response = $this->putJson('/api/inventory/outgoing/' . $outgoing->id, [
             'transaction_id' => $transaction_id,
@@ -193,15 +242,22 @@ class OutgoingControllerTest extends TestCase
 
         Gate::authorize('haveaccess', 'outgoing.edit');
 
+        $product1Fresh = Product::find($product1->id);
+        $product2Fresh = Product::find($product2->id);
+
         $response->assertOk();
 
-        $this->assertCount(1, Outgoing::all());
+        $this->assertCount(2, Outgoing::all());
 
         $outgoing = $outgoing->fresh();
 
         $this->assertEquals($outgoing->transaction_id, $transaction_id);
         $this->assertEquals($outgoing->actor_id, $actor_id);
         $this->assertEquals($outgoing->products, $products);
+        $this->assertEquals($product1Fresh->stock, 26);
+        $this->assertEquals($product1Fresh->sales, 18);
+        $this->assertEquals($product2Fresh->stock, 27);
+        $this->assertEquals($product2Fresh->sales, 26);
         $this->assertEquals($outgoing->subtotal, $subtotal);
         $this->assertEquals($outgoing->taxes, $taxes);
         $this->assertEquals($outgoing->total, $total);
@@ -216,7 +272,35 @@ class OutgoingControllerTest extends TestCase
 
         $this->user_login();
 
-        $outgoing = Outgoing::first();
+        $product1 = Product::factory()->create(
+            [
+                'stock' => 18,
+                'sales' => 16,
+            ]
+        );
+        $product2 = Product::factory()->create(
+            [
+                'stock' => 13,
+                'sales' => 12,
+            ]
+        );
+
+        $outgoing = Outgoing::factory()->create(
+            [
+                'products' => [
+                    [
+                        'product_id' => $product1->id,
+                        'quantity' => 5,
+                        'price' => 50,
+                    ],
+                    [
+                        'product_id' => $product2->id,
+                        'quantity' => 7,
+                        'price' => 40,
+                    ]
+                ]
+            ]
+        );
 
         $response = $this->deleteJson('/api/inventory/outgoing/' . $outgoing->id);
 
@@ -224,7 +308,15 @@ class OutgoingControllerTest extends TestCase
 
         $response->assertOk();
 
-        $this->assertCount(0, Outgoing::all());
+        $this->assertCount(1, Outgoing::all());
+
+        $product1Fresh = Product::find($product1->id);
+        $product2Fresh = Product::find($product2->id);
+
+        $this->assertEquals($product1Fresh->stock, 23);
+        $this->assertEquals($product1Fresh->sales, 11);
+        $this->assertEquals($product2Fresh->stock, 20);
+        $this->assertEquals($product2Fresh->sales, 5);
 
         $outgoings = Outgoing::paginate(15);
 

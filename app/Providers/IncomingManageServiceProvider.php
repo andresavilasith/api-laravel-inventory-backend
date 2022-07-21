@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-class IncomingProductUpdateServiceProvider extends ServiceProvider
+class IncomingManageServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -13,7 +13,7 @@ class IncomingProductUpdateServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        require_once app_path() . '/Helpers/IncomingProductUpdate.php';
+        require_once app_path() . '/Helpers/IncomingManage.php';
     }
 
     /**

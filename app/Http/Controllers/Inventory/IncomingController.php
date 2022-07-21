@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Inventory;
 
-use App\Helpers\IncomingProductUpdate;
+use App\Helpers\IncomingManage;
 use App\Http\Controllers\Controller;
 use App\Models\Inventory\Incoming;
 use Illuminate\Http\Request;
@@ -51,10 +51,14 @@ class IncomingController extends Controller
         Gate::authorize('haveaccess', 'incoming.create');
 
         $products = $request->products;
+        $requestIncoming = $request->all();
 
-        IncomingProductUpdate::addProducts($products);
+        IncomingManage::addProducts($products);
+        $save = IncomingManage::calculateTotal($requestIncoming);
 
-        $incoming = Incoming::create($request->all());
+        if ($save) {
+            $incoming = Incoming::create($request->all());
+        }
 
         return response()->json([
             'status' => 'success',
@@ -106,13 +110,19 @@ class IncomingController extends Controller
     {
         Gate::authorize('haveaccess', 'incoming.edit');
 
+        $requestIncoming = $request->all();
+
         $products = $request->products;
 
         $oldProducts = $incoming->products;
 
-        IncomingProductUpdate::updateProducts($oldProducts, $products);
+        IncomingManage::updateProducts($oldProducts, $products);
 
-        $incoming->update($request->all());
+        $update = IncomingManage::calculateTotal($requestIncoming);
+
+        if ($update) {
+            $incoming->update($request->all());
+        }
 
         return response()->json([
             'status' => 'success',
@@ -134,7 +144,7 @@ class IncomingController extends Controller
 
         $products = $incoming->products;
 
-        IncomingProductUpdate::removeProducts($products);
+        IncomingManage::removeProducts($products);
 
         $incoming->delete();
 

@@ -25,13 +25,13 @@ class OutgoingFactory extends Factory
             'products' => [
                 [
                     'product_id' => Product::factory(),
-                    'cantidad' => 10,
-                    'precio' => 50,
+                    'quantity' => 10,
+                    'price' => 50,
                 ],
                 [
                     'product_id' => Product::factory(),
-                    'cantidad' => 10,
-                    'precio' => 60,
+                    'quantity' => 10,
+                    'price' => 60,
                 ],
             ],
             'subtotal' => 1100,
