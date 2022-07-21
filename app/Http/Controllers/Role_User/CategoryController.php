@@ -74,6 +74,8 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
+        Gate::authorize('haveaccess', 'category.destroy');
+        
         $category->delete();
 
         $categories = $category->all();

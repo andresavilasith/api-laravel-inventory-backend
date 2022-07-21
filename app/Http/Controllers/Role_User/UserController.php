@@ -28,7 +28,6 @@ class UserController extends Controller
         ]);
 
 
-
         $user->roles()->sync([2]);
 
         return response()->json([

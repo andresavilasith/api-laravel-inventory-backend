@@ -19,6 +19,15 @@ class UserControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function user_login()
+    {
+        DefaultDataSeed::default_data_seed();
+
+        $user = User::first();
+
+        Passport::actingAs($user);
+    }
+
     /** @test */
     public function test_user_register()
     {
@@ -72,11 +81,7 @@ class UserControllerTest extends TestCase
     /** @test */
     public function test_user_identified()
     {
-        DefaultDataSeed::default_data_seed();
-
-        $user = User::first();
-
-        Passport::actingAs($user);
+        $this->user_login();
 
         $response = $this->getJson('/api/panel/user/identified');
 
@@ -86,10 +91,7 @@ class UserControllerTest extends TestCase
     /** @test */
     public function test_user_permissions()
     {
-        DefaultDataSeed::default_data_seed();
-        $user = User::first();
-
-        Passport::actingAs($user);
+        $this->user_login();
 
         $response = $this->getJson('/api/panel/user/permissions');
 
@@ -112,12 +114,7 @@ class UserControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        DefaultDataSeed::default_data_seed();
-
-
-        $user = User::first();
-
-        Passport::actingAs($user);
+        $this->user_login();
 
         $response = $this->postJson('/api/panel/user');
 
@@ -255,10 +252,7 @@ class UserControllerTest extends TestCase
 
         $response = $this->delete('/api/panel/user/' . $user->id);
 
-
         Gate::authorize('haveaccess', 'user.destroy');
-
-
 
         $response->assertJsonStructure(['message', 'status', 'users'])->assertStatus(200);
     }

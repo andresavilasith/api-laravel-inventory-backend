@@ -16,16 +16,21 @@ class CategoryControllerTest extends TestCase
 
     use RefreshDatabase;
 
-    /** @test */
-    public function test_category_index()
+    public function user_login()
     {
-        $this->withoutExceptionHandling();
-
         DefaultDataSeed::default_data_seed();
 
         $user = User::first();
 
         Passport::actingAs($user);
+    }
+
+    /** @test */
+    public function test_category_index()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->user_login();
 
         $response = $this->postJson('/api/panel/categories');
 
@@ -43,11 +48,7 @@ class CategoryControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        DefaultDataSeed::default_data_seed();
-
-        $user = User::first();
-
-        Passport::actingAs($user);
+        $this->user_login();
 
         $category = Category::first();
 
@@ -64,11 +65,7 @@ class CategoryControllerTest extends TestCase
     public function test_category_create(){
         $this->withoutExceptionHandling();
 
-        DefaultDataSeed::default_data_seed();
-
-        $user = User::first();
-
-        Passport::actingAs($user);
+        $this->user_login();
 
         $response = $this->getJson('/api/panel/category/create');
 
@@ -87,11 +84,7 @@ class CategoryControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        DefaultDataSeed::default_data_seed();
-
-        $user = User::first();
-
-        Passport::actingAs($user);
+        $this->user_login();
 
         $name = 'Category 1 now';
         $description = 'New Category';
@@ -101,8 +94,6 @@ class CategoryControllerTest extends TestCase
             'name' => $name,
             'description' => $description
         ]);
-        
-  
 
         Gate::authorize('haveaccess', 'category.create');
 
@@ -125,11 +116,7 @@ class CategoryControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        DefaultDataSeed::default_data_seed();
-
-        $user = User::first();
-
-        Passport::actingAs($user);
+        $this->user_login();
 
         $category = Category::first();
 
@@ -147,11 +134,7 @@ class CategoryControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        DefaultDataSeed::default_data_seed();
-
-        $user = User::first();
-
-        Passport::actingAs($user);
+        $this->user_login();
 
         $category = Category::first();
 
@@ -181,11 +164,7 @@ class CategoryControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        DefaultDataSeed::default_data_seed();
-
-        $user = User::first();
-
-        Passport::actingAs($user);
+        $this->user_login();
 
         $category=Category::first();
 
