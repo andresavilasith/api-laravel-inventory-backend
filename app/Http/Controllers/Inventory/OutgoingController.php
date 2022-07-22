@@ -154,7 +154,6 @@ class OutgoingController extends Controller
         Gate::authorize('haveaccess', 'outgoing.destroy');
 
         $products = $outgoing->products;
-        //dd($products);
 
         OutgoingManage::removeProducts($products);
 

@@ -168,8 +168,6 @@ class PermissionControllerTest extends TestCase
 
         $response->assertOk();
 
-        //dd(count(Permission::all()));5
-
         $this->assertCount(5, Permission::all());
 
         $permission = $permission->fresh();

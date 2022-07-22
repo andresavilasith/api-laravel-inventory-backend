@@ -93,12 +93,14 @@ class OutgoingControllerTest extends TestCase
             [
                 'stock' => 25,
                 'sales' => 20,
+                'price' => 10
             ]
         );
         $product2 = Product::factory()->create(
             [
                 'stock' => 35,
                 'sales' => 15,
+                'price' => 15
             ]
         );
 
@@ -107,18 +109,18 @@ class OutgoingControllerTest extends TestCase
         $products = [
             [
                 'product_id' => $product1->id,
+                'price' => $product1->price,
                 'quantity' => 10,
-                'price' => 60,
             ],
             [
                 'product_id' => $product2->id,
+                'price' => $product2->price,
                 'quantity' => 13,
-                'price' => 30,
             ]
         ];
-        $subtotal = 990;
-        $taxes = 118.80;
-        $total = 1108.80;
+        $subtotal = 295;
+        $taxes = 35.40;
+        $total = 330.40;
 
         $response = $this->postJson('/api/inventory/outgoing', [
             'transaction_id' => $transaction_id,
@@ -187,12 +189,14 @@ class OutgoingControllerTest extends TestCase
             [
                 'stock' => 23,
                 'sales' => 21,
+                'price' => 10
             ]
         );
         $product2 = Product::factory()->create(
             [
                 'stock' => 35,
                 'sales' => 18,
+                'price' => 15
             ]
         );
 
@@ -201,13 +205,13 @@ class OutgoingControllerTest extends TestCase
                 'products' => [
                     [
                         'product_id' => $product1->id,
+                        'price' => $product1->price,
                         'quantity' => 15,
-                        'price' => 50,
                     ],
                     [
                         'product_id' => $product2->id,
+                        'price' => $product2->price,
                         'quantity' => 10,
-                        'price' => 40,
                     ]
                 ]
             ]
@@ -218,18 +222,18 @@ class OutgoingControllerTest extends TestCase
         $products = [
             [
                 'product_id' => $product1->id,
+                'price' => $product1->price,
                 'quantity' => 12,
-                'price' => 20,
             ],
             [
                 'product_id' => $product2->id,
+                'price' => $product2->price,
                 'quantity' => 18,
-                'price' => 40,
             ]
         ];
-        $subtotal = 960;
-        $taxes = 115.20;
-        $total = 1075.20;
+        $subtotal = 390;
+        $taxes = 46.80;
+        $total = 436.80;
 
         $response = $this->putJson('/api/inventory/outgoing/' . $outgoing->id, [
             'transaction_id' => $transaction_id,
@@ -276,12 +280,14 @@ class OutgoingControllerTest extends TestCase
             [
                 'stock' => 23,
                 'sales' => 21,
+                'price' => 10
             ]
         );
         $product2 = Product::factory()->create(
             [
                 'stock' => 35,
                 'sales' => 18,
+                'price' => 15
             ]
         );
 
@@ -290,13 +296,13 @@ class OutgoingControllerTest extends TestCase
                 'products' => [
                     [
                         'product_id' => $product1->id,
+                        'price' => $product1->price,
                         'quantity' => 15,
-                        'price' => 50,
                     ],
                     [
                         'product_id' => $product2->id,
+                        'price' => $product2->price,
                         'quantity' => 10,
-                        'price' => 40,
                     ]
                 ]
             ]
@@ -307,13 +313,13 @@ class OutgoingControllerTest extends TestCase
         $products = [
             [
                 'product_id' => $product1->id,
+                'price' => $product1->price,
                 'quantity' => 12,
-                'price' => 20,
             ]
         ];
-        $subtotal = 240;
-        $taxes = 28.8;
-        $total = 268.80;
+        $subtotal = 120;
+        $taxes = 14.40;
+        $total = 134.40;
 
         $response = $this->putJson('/api/inventory/outgoing/' . $outgoing->id, [
             'transaction_id' => $transaction_id,
@@ -360,24 +366,28 @@ class OutgoingControllerTest extends TestCase
             [
                 'stock' => 23,
                 'sales' => 21,
+                'price' => 10
             ]
         );
         $product2 = Product::factory()->create(
             [
                 'stock' => 35,
                 'sales' => 18,
+                'price' => 15
             ]
         );
         $product3 = Product::factory()->create(
             [
                 'stock' => 30,
                 'sales' => 12,
+                'price' => 20
             ]
         );
         $product4 = Product::factory()->create(
             [
                 'stock' => 15,
                 'sales' => 6,
+                'price' => 25
             ]
         );
 
@@ -386,13 +396,13 @@ class OutgoingControllerTest extends TestCase
                 'products' => [
                     [
                         'product_id' => $product1->id,
+                        'price' => $product1->price,
                         'quantity' => 15,
-                        'price' => 50,
                     ],
                     [
                         'product_id' => $product2->id,
+                        'price' => $product2->price,
                         'quantity' => 10,
-                        'price' => 40,
                     ]
                 ]
             ]
@@ -403,13 +413,23 @@ class OutgoingControllerTest extends TestCase
         $products = [
             [
                 'product_id' => $product1->id,
+                'price' => $product1->price,
                 'quantity' => 12,
-                'price' => 20,
-            ]
+            ],
+            [
+                'product_id' => $product3->id,
+                'price' => $product3->price,
+                'quantity' => 13,
+            ],
+            [
+                'product_id' => $product4->id,
+                'price' => $product4->price,
+                'quantity' => 10,
+            ],
         ];
-        $subtotal = 240;
-        $taxes = 28.8;
-        $total = 268.80;
+        $subtotal = 630;
+        $taxes = 75.60;
+        $total = 705.60;
 
         $response = $this->putJson('/api/inventory/outgoing/' . $outgoing->id, [
             'transaction_id' => $transaction_id,
@@ -424,6 +444,8 @@ class OutgoingControllerTest extends TestCase
 
         $product1 = $product1->fresh();
         $product2 = $product2->fresh();
+        $product3 = $product3->fresh();
+        $product4 = $product4->fresh();
 
         $response->assertOk();
 
@@ -438,6 +460,10 @@ class OutgoingControllerTest extends TestCase
         $this->assertEquals($product1->sales, 18);
         $this->assertEquals($product2->stock, 45);
         $this->assertEquals($product2->sales, 8);
+        $this->assertEquals($product3->stock, 17);
+        $this->assertEquals($product3->sales, 25);
+        $this->assertEquals($product4->stock, 5);
+        $this->assertEquals($product4->sales, 16);
         $this->assertEquals($outgoing->subtotal, $subtotal);
         $this->assertEquals($outgoing->taxes, $taxes);
         $this->assertEquals($outgoing->total, $total);

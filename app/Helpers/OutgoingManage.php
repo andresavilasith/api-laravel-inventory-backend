@@ -27,14 +27,24 @@ class OutgoingManage
             $product = Product::find($productValue['product_id']);
             $productQuantity = $productValue['quantity'];
 
-            $product->sales  = $product->sales - $oldProducts[$key]['quantity'] + $productQuantity;
 
-            if ($productQuantity > $oldProducts[$key]['quantity']) {
-                $product->stock  =  $product->stock -  ($productQuantity - $oldProducts[$key]['quantity']);
+            $countOldProducts = count($oldProducts);
+
+            if ($key <= $countOldProducts - 1 && $product->id == $oldProducts[$key]['product_id']) {
+                $product->sales  = $product->sales - $oldProducts[$key]['quantity'] + $productQuantity;
+
+                if ($productQuantity > $oldProducts[$key]['quantity']) {
+                    $product->stock  =  $product->stock -  ($productQuantity - $oldProducts[$key]['quantity']);
+                } else {
+
+                    $product->stock  =  $product->stock  + ($oldProducts[$key]['quantity'] - $productQuantity);
+                }
             } else {
-
-                $product->stock  =  $product->stock  + ($oldProducts[$key]['quantity'] - $productQuantity);
+                $product->stock  =  $product->stock -  $productQuantity;
+                $product->sales  = $product->sales  + $productQuantity;
             }
+
+
 
             $product->update();
         }
@@ -94,8 +104,7 @@ class OutgoingManage
         $subtotal = round(array_sum($subtotalQuantityPrice), 2);
         $taxes = round(array_sum($taxQuantityPrice), 2);
         $total = round($subtotal + $taxes, 2);
-
-
+        
         if ($requestSubtotal === $subtotal && $requestTaxes === $taxes && $requestTotal === $total) {
             $isEqual = true;
         }

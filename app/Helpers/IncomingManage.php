@@ -76,7 +76,6 @@ class IncomingManage
         }
 
         $total = array_sum($totalQuantityPrice);
-        //dd($total);
 
         if ($incomingRequest['total'] === $total) {
             $isEqual = true;
