@@ -90,12 +90,14 @@ class IncomingControllerTest extends TestCase
 
         $product1 = Product::factory()->create(
             [
+                'price' => 10,
                 'stock' => 5,
                 'receipts' => 20,
             ]
         );
         $product2 = Product::factory()->create(
             [
+                'price' => 15,
                 'stock' => 5,
                 'receipts' => 15,
             ]
@@ -106,17 +108,17 @@ class IncomingControllerTest extends TestCase
         $products = [
             [
                 'product_id' => $product1->id,
+                'price' => $product1->price, //10
                 'quantity' => 10,
-                'price' => 60,
             ],
             [
                 'product_id' => $product2->id,
+                'price' => $product2->price, //15
                 'quantity' => 30,
-                'price' => 30,
             ],
 
         ];
-        $total = 1500;
+        $total = 550;
 
         $response = $this->postJson('/api/inventory/incoming', [
             'transaction_id' => $transaction_id,
@@ -124,8 +126,6 @@ class IncomingControllerTest extends TestCase
             'products' => $products,
             'total' => $total,
         ]);
-
-        //dd($response->getContent());
 
         $product1 = $product1->fresh();
         $product2 = $product2->fresh();
@@ -183,10 +183,12 @@ class IncomingControllerTest extends TestCase
             [
                 'stock' => 18,
                 'receipts' => 16,
+                'price' => 10,
             ]
         );
         $product2 = Product::factory()->create(
             [
+                'price' => 15,
                 'stock' => 13,
                 'receipts' => 12,
             ]
@@ -197,13 +199,13 @@ class IncomingControllerTest extends TestCase
                 'products' => [
                     [
                         'product_id' => $product1->id,
+                        'price' => $product1->price, //10
                         'quantity' => 15,
-                        'price' => 50,
                     ],
                     [
                         'product_id' => $product2->id,
+                        'price' => $product2->price, //15
                         'quantity' => 10,
-                        'price' => 40,
                     ]
                 ]
             ]
@@ -214,16 +216,16 @@ class IncomingControllerTest extends TestCase
         $products = [
             [
                 'product_id' => $product1->id,
+                'price' => $product1->price, //10
                 'quantity' => 4,
-                'price' => 60,
             ],
             [
                 'product_id' => $product2->id,
+                'price' => $product2->price, //15
                 'quantity' => 6,
-                'price' => 60,
             ],
         ];
-        $total = 600;
+        $total = 130;
 
         $response = $this->putJson('/api/inventory/incoming/' . $incoming->id, [
             'transaction_id' => $transaction_id,
@@ -231,7 +233,7 @@ class IncomingControllerTest extends TestCase
             'products' => $products,
             'total' => $total,
         ]);
-      
+
 
 
         Gate::authorize('haveaccess', 'incoming.edit');
@@ -268,12 +270,14 @@ class IncomingControllerTest extends TestCase
             [
                 'stock' => 18,
                 'receipts' => 16,
+                'price' => 10
             ]
         );
         $product2 = Product::factory()->create(
             [
                 'stock' => 13,
                 'receipts' => 12,
+                'price' => 15
             ]
         );
 
@@ -282,13 +286,13 @@ class IncomingControllerTest extends TestCase
                 'products' => [
                     [
                         'product_id' => $product1->id,
+                        'price' => $product1->price,
                         'quantity' => 15,
-                        'price' => 50,
                     ],
                     [
                         'product_id' => $product2->id,
+                        'price' => $product2->price,
                         'quantity' => 5,
-                        'price' => 40,
                     ]
                 ]
             ]
@@ -299,16 +303,16 @@ class IncomingControllerTest extends TestCase
         $products = [
             [
                 'product_id' => $product1->id,
+                'price' => $product1->price, //10
                 'quantity' => 17,
-                'price' => 60,
             ],
             [
                 'product_id' => $product2->id,
+                'price' => $product2->price, //15
                 'quantity' => 9,
-                'price' => 60,
             ],
         ];
-        $total = 1560;
+        $total = 305;
 
         $response = $this->putJson('/api/inventory/incoming/' . $incoming->id, [
             'transaction_id' => $transaction_id,
@@ -316,7 +320,6 @@ class IncomingControllerTest extends TestCase
             'products' => $products,
             'total' => $total,
         ]);
-
 
         Gate::authorize('haveaccess', 'incoming.edit');
 
@@ -352,12 +355,14 @@ class IncomingControllerTest extends TestCase
             [
                 'stock' => 18,
                 'receipts' => 16,
+                'price' => 10
             ]
         );
         $product2 = Product::factory()->create(
             [
                 'stock' => 13,
                 'receipts' => 12,
+                'price' => 15
             ]
         );
 
@@ -366,13 +371,13 @@ class IncomingControllerTest extends TestCase
                 'products' => [
                     [
                         'product_id' => $product1->id,
+                        'price' => $product1->price,
                         'quantity' => 15,
-                        'price' => 50,
                     ],
                     [
                         'product_id' => $product2->id,
+                        'price' => $product2->price,
                         'quantity' => 10,
-                        'price' => 40,
                     ]
                 ]
             ]
@@ -383,11 +388,11 @@ class IncomingControllerTest extends TestCase
         $products = [
             [
                 'product_id' => $product1->id,
+                'price' => $product1->price, //10
                 'quantity' => 4,
-                'price' => 60,
             ],
         ];
-        $total = 240;
+        $total = 40;
 
         $response = $this->putJson('/api/inventory/incoming/' . $incoming->id, [
             'transaction_id' => $transaction_id,
@@ -430,24 +435,28 @@ class IncomingControllerTest extends TestCase
         $product1 = Product::factory()->create(
             [
                 'stock' => 18,
+                'price' => 10,
                 'receipts' => 16,
             ]
         );
         $product2 = Product::factory()->create(
             [
                 'stock' => 13,
+                'price' => 15,
                 'receipts' => 12,
             ]
         );
         $product3 = Product::factory()->create(
             [
                 'stock' => 23,
+                'price' => 20,
                 'receipts' => 15,
             ]
         );
         $product4 = Product::factory()->create(
             [
                 'stock' => 16,
+                'price' => 25,
                 'receipts' => 12,
             ]
         );
@@ -457,13 +466,13 @@ class IncomingControllerTest extends TestCase
                 'products' => [
                     [
                         'product_id' => $product1->id,
+                        'price' => $product1->price,
                         'quantity' => 15,
-                        'price' => 50,
                     ],
                     [
                         'product_id' => $product2->id,
+                        'price' => $product2->price,
                         'quantity' => 10,
-                        'price' => 40,
                     ]
                 ]
             ]
@@ -474,39 +483,36 @@ class IncomingControllerTest extends TestCase
         $products = [
             [
                 'product_id' => $product1->id,
+                'price' => $product1->price,//10
                 'quantity' => 4,
-                'price' => 60,
             ],
             [
                 'product_id' => $product3->id,
+                'price' => $product3->price,//20
                 'quantity' => 7,
-                'price' => 2,
             ],
             [
                 'product_id' => $product4->id,
+                'price' => $product4->price,//25
                 'quantity' => 14,
-                'price' => 13,
             ],
         ];
-        $total = 436;
-        
+        $total = 530;
+
         $response = $this->putJson('/api/inventory/incoming/' . $incoming->id, [
             'transaction_id' => $transaction_id,
             'actor_id' => $actor_id,
             'products' => $products,
             'total' => $total,
         ]);
-        //dd(Product::all()->toArray());
-
 
         Gate::authorize('haveaccess', 'incoming.edit');
-        
+
         $product1 = $product1->fresh();
         $product2 = $product2->fresh();
         $product3 = $product3->fresh();
         $product4 = $product4->fresh();
-        
-        //dd($product3->toArray());
+
         $response->assertOk();
 
         $this->assertCount(2, Incoming::all());

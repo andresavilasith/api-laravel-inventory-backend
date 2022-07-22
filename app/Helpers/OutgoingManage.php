@@ -43,12 +43,13 @@ class OutgoingManage
         foreach ($oldProducts as $key => $oldProductValue) {
             $oldProductId = $oldProductValue['product_id'];
             $quantityOldProduct = $oldProductValue['quantity'];
+
             if (!in_array($oldProductId, $updateProductsIds)) {
                 $product = Product::find($oldProductId);
                 $product->stock = $product->stock + $quantityOldProduct;
                 $product->sales = $product->sales - $quantityOldProduct;
                 $product->update();
-            };
+            }
         }
     }
 
