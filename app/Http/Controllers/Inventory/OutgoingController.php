@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Inventory;
 use App\Helpers\OutgoingManage;
 use App\Http\Controllers\Controller;
 use App\Models\Inventory\Outgoing;
+use App\Models\Inventory\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
@@ -34,9 +35,11 @@ class OutgoingController extends Controller
     public function create()
     {
         Gate::authorize('haveaccess', 'outgoing.create');
+        $products = Product::with('tax')->get();
 
         return response()->json([
-            'status' => 'success'
+            'status' => 'success',
+            'products' => $products
         ]);
     }
 
@@ -99,9 +102,11 @@ class OutgoingController extends Controller
     public function edit(Outgoing $outgoing)
     {
         Gate::authorize('haveaccess', 'outgoing.edit');
+        $products = Product::with('tax')->get();
 
         return response()->json([
             'outgoing' => $outgoing,
+            'products' => $products,
             'status' => 'success'
         ], 200);
     }
@@ -126,7 +131,7 @@ class OutgoingController extends Controller
         OutgoingManage::updateProducts($oldProducts, $products);
 
         $update = OutgoingManage::calculateTotalWithTaxes($outgoingRequest);
-        
+
         $data = [
             'status' => 'error',
         ];

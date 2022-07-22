@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Inventory;
 use App\Helpers\IncomingManage;
 use App\Http\Controllers\Controller;
 use App\Models\Inventory\Incoming;
+use App\Models\Inventory\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
@@ -34,9 +35,11 @@ class IncomingController extends Controller
     public function create()
     {
         Gate::authorize('haveaccess', 'document.create');
+        $products = Product::all();
 
         return response()->json([
-            'status' => 'success'
+            'status' => 'success',
+            'products' => $products
         ]);
     }
 
@@ -92,9 +95,11 @@ class IncomingController extends Controller
     public function edit(Incoming $incoming)
     {
         Gate::authorize('haveaccess', 'incoming.edit');
+        $products = Product::all();
 
         return response()->json([
             'incoming' => $incoming,
+            'products' => $products,
             'status' => 'success'
         ], 200);
     }
