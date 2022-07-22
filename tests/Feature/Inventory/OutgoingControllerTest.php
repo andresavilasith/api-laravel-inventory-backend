@@ -131,8 +131,8 @@ class OutgoingControllerTest extends TestCase
 
         Gate::authorize('haveaccess', 'outgoing.create');
 
-        $product1Fresh = Product::find($product1->id);
-        $product2Fresh = Product::find($product2->id);
+        $product1Fresh = $product1->fresh();
+        $product2Fresh = $product2->fresh();
 
         $response->assertOk();
 
@@ -242,8 +242,8 @@ class OutgoingControllerTest extends TestCase
 
         Gate::authorize('haveaccess', 'outgoing.edit');
 
-        $product1Fresh = Product::find($product1->id);
-        $product2Fresh = Product::find($product2->id);
+        $product1Fresh = $product1->fresh();
+        $product2Fresh = $product2->fresh();
 
         $response->assertOk();
 
@@ -310,8 +310,8 @@ class OutgoingControllerTest extends TestCase
 
         $this->assertCount(1, Outgoing::all());
 
-        $product1Fresh = Product::find($product1->id);
-        $product2Fresh = Product::find($product2->id);
+        $product1Fresh = $product1->fresh();
+        $product2Fresh = $product2->fresh();
 
         $this->assertEquals($product1Fresh->stock, 23);
         $this->assertEquals($product1Fresh->sales, 11);

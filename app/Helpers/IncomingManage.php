@@ -22,13 +22,19 @@ class IncomingManage
         $updateProductsIds = [];
 
         foreach ($products as $key => $productValue) {
+
             $updateProductsIds[] = $productValue['product_id'];
             $product = Product::find($productValue['product_id']);
             $productQuantity = $productValue['quantity'];
+            $countOldProducts = count($oldProducts);
 
-            $product->stock  =  $product->stock - $oldProducts[$key]['quantity'] +  $productQuantity;
-            $product->receipts  = $product->receipts - $oldProducts[$key]['quantity'] +  $productQuantity;
-
+            if ($key <= $countOldProducts - 1 && $product->id == $oldProducts[$key]['product_id']) {
+                $product->stock  =  $product->stock - $oldProducts[$key]['quantity'] +  $productQuantity;
+                $product->receipts  = $product->receipts - $oldProducts[$key]['quantity'] +  $productQuantity;
+            } else {
+                $product->stock  =  $product->stock +  $productQuantity;
+                $product->receipts  = $product->receipts +  $productQuantity;
+            }
 
             $product->update();
         }
